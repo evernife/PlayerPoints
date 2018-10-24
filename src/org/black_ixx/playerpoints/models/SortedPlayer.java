@@ -1,15 +1,15 @@
 package org.black_ixx.playerpoints.models;
 
 /**
- * Holder class that will sort based on the points and by the uuid. Note, this
- * sorts by order of highest points first and uses player uuid for any matches.
+ * Holder class that will sort based on the points and by the name. Note, this
+ * sorts by order of highest points first and uses player name for any matches.
  * 
  * @author Mitsugaru
  */
 public class SortedPlayer implements Comparable<SortedPlayer> {
 
     /**
-     * Player uuid.
+     * Player name.
      */
     final String uuid;
 
@@ -22,7 +22,7 @@ public class SortedPlayer implements Comparable<SortedPlayer> {
      * Constructor.
      * 
      * @param uuid
-     *            - Player uuid.
+     *            - Player name.
      * @param points
      *            - Point amount.
      */
@@ -32,7 +32,7 @@ public class SortedPlayer implements Comparable<SortedPlayer> {
     }
 
     /**
-     * Get the player uuid.
+     * Get the player name.
      * 
      * @return Name of player.
      */

@@ -6,7 +6,7 @@ package org.black_ixx.playerpoints.models;
  * @author Mitsugaru
  */
 public enum Flag {
-    NAME("%uuid"),
+    NAME("%name"),
     TAG("%tag"),
     PLAYER("%player"),
     EXTRA("%extra"),
