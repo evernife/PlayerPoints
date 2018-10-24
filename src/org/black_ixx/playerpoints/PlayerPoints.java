@@ -1,14 +1,13 @@
 package org.black_ixx.playerpoints;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 
+import br.com.finalcraft.evernifecore.config.uuids.UUIDsController;
 import org.black_ixx.playerpoints.commands.Commander;
 import org.black_ixx.playerpoints.config.LocalizeConfig;
 import org.black_ixx.playerpoints.config.RootConfig;
@@ -17,16 +16,11 @@ import org.black_ixx.playerpoints.listeners.VotifierListener;
 import org.black_ixx.playerpoints.services.ExecutorModule;
 import org.black_ixx.playerpoints.services.IModule;
 import org.black_ixx.playerpoints.storage.StorageHandler;
-import org.black_ixx.playerpoints.storage.exports.Exporter;
-import org.black_ixx.playerpoints.storage.imports.Importer;
-import org.black_ixx.playerpoints.update.UpdateManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.evilmidget38.UUIDFetcher;
 
 /**
  * Main plugin class for PlayerPoints.
@@ -57,19 +51,10 @@ public class PlayerPoints extends JavaPlugin {
         registerModule(RootConfig.class, rootConfig);
         // Initialize ExecutorService
         registerModule(ExecutorModule.class, new ExecutorModule());
-        // Do imports
-        Importer importer = new Importer(this);
-        importer.checkImport();
-        // Do exports
-        Exporter exporter = new Exporter(this);
-        exporter.checkExport();
         // Intialize storage handler
         registerModule(StorageHandler.class, new StorageHandler(this));
         // Initialize API
         api = new PlayerPointsAPI(this);
-        // Initialize updater
-        UpdateManager update = new UpdateManager(this);
-        update.checkUpdate();
         // Register commands
         final Commander commander = new Commander(this);
         if(getDescription().getCommands().containsKey("points")) {
@@ -212,61 +197,10 @@ public class PlayerPoints extends JavaPlugin {
      * @return Player UUID. Null if no match found.
      */
     public UUID translateNameToUUID(String name) {
-        UUID id = null;
-        RootConfig config = getModuleForClass(RootConfig.class);
-        if(config.debugUUID) {
-        	getLogger().info("translateNameToUUID(" + name + ")");
+        String stringUUId = UUIDsController.getUUIDFromName(name);
+        if (stringUUId == null){
+            return null;
         }
-
-        if(name == null) {
-        	if(config.debugUUID) {
-            	getLogger().info("translateNameToUUID() - bad ID");
-            }
-        	return id;
-        }
-
-        // Look through online players first
-        if(config.debugUUID) {
-        	getLogger().info("translateNameToUUID() - Looking through online players: " + Bukkit.getServer().getOnlinePlayers().size());
-        }
-        Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
-        for(Player p : players) {
-            if(p.getName().equalsIgnoreCase(name)) {
-                id = p.getUniqueId();
-                if(config.debugUUID) {
-                	getLogger().info("translateNameToUUID() online player UUID found: " + id.toString());
-                }
-                break;
-            }
-        }
-
-        // Last resort, attempt bukkit api lookup
-        if(id == null && Bukkit.getServer().getOnlineMode()) {
-        	if(config.debugUUID) {
-            	getLogger().info("translateNameToUUID() - Attempting online lookup");
-            }
-        	UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(name));
-        	try {
-				Map<String, UUID> map = fetcher.call();
-				for(Map.Entry<String, UUID> entry : map.entrySet()) {
-					if(name.equalsIgnoreCase(entry.getKey())) {
-						id = entry.getValue();
-						if(config.debugUUID) {
-							getLogger().info("translateNameToUUID() web player UUID found: " + ((id == null) ? id : id.toString()));
-						}
-						break;
-					}
-				}
-			} catch (Exception e) {
-				getLogger().log(Level.SEVERE, "Exception on online UUID fetch", e);
-			}
-        } else if(id == null && !Bukkit.getServer().getOnlineMode()) {
-            //There's nothing we can do but attempt to get the UUID from old method.
-            id = Bukkit.getServer().getOfflinePlayer(name).getUniqueId();
-            if(config.debugUUID) {
-                getLogger().info("translateNameToUUID() offline player UUID found: " + ((id == null) ? id : id.toString()));
-            }
-        }
-        return id;
+        return UUID.fromString(stringUUId);
     }
 }

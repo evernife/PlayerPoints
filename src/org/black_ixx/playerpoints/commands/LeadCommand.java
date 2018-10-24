@@ -8,6 +8,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import br.com.finalcraft.evernifecore.config.uuids.UUIDsController;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.config.LocalizeConfig;
 import org.black_ixx.playerpoints.config.LocalizeNode;
@@ -17,7 +18,6 @@ import org.black_ixx.playerpoints.permissions.PermissionHandler;
 import org.black_ixx.playerpoints.permissions.PermissionNode;
 import org.black_ixx.playerpoints.services.CommandHandler;
 import org.black_ixx.playerpoints.storage.StorageHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -105,7 +105,7 @@ public class LeadCommand extends CommandHandler {
             }
             SortedPlayer player = array[i];
             sender.sendMessage(ChatColor.AQUA + "" + (i + 1) + ". "
-                    + ChatColor.GRAY + Bukkit.getOfflinePlayer(UUID.fromString(player.getName())).getName()  + ChatColor.WHITE
+                    + ChatColor.GRAY + UUIDsController.getNameFromUUID(player.getUUID()) + ChatColor.WHITE
                     + " - " + ChatColor.GOLD + player.getPoints());
         }
 

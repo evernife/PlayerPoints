@@ -89,13 +89,7 @@ public class RootConfig implements IModule {
          * Storage
          */
         final String back = config.getString("storage");
-        if(back.equalsIgnoreCase("sqlite")) {
-            backend = StorageType.SQLITE;
-        } else if(back.equalsIgnoreCase("mysql")) {
-            backend = StorageType.MYSQL;
-        } else {
-            backend = StorageType.YAML;
-        }
+        backend = StorageType.YAML;
         /**
          * SQL info
          */
@@ -110,18 +104,9 @@ public class RootConfig implements IModule {
         exportSQL = config.getBoolean("mysql.export.use", false);
         final String databaseImportSource = config.getString(
                 "mysql.import.source", "YAML");
-        if(databaseImportSource.equalsIgnoreCase("SQLITE")) {
-            importSource = StorageType.SQLITE;
-        } else {
-            importSource = StorageType.YAML;
-        }
+        importSource = StorageType.YAML;
         final String databaseExportSource = config.getString(
                 "mysql.export.source", "MYSQL");
-        if(databaseExportSource.equalsIgnoreCase("SQLITE")) {
-            exportSource = StorageType.SQLITE;
-        } else {
-            exportSource = StorageType.MYSQL;
-        }
     }
 
     /**
